@@ -3,11 +3,11 @@ Batch delete special prefix redis key by SCAN instead of KEYS command
 
 # Usage
 
-## ./redis-cli batch-del-redis <pattern>
+./redis-cli batch-del-redis {special-prefix}
 
 # Features
 
-## batch delete special prefix redis key with SCAN command instead of KEYS command, because KEYS is so slow and affect other processes which use redis at the same time, the most worse is that the process will be down.
+batch delete special prefix redis key with SCAN command instead of KEYS command, because KEYS is so slow and affect other processes which use redis at the same time, the most worse is that the process will be down.
 
 # License
 
