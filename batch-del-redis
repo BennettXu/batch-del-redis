@@ -1,0 +1,44 @@
+#!/bin/bash
+
+host="192.168.1.1"
+port=6379
+passwd="loveit"
+
+if [ $# -ne 1 ]
+then
+  echo "Delete keys from Redis matching a pattern using SCAN & DEL"
+  echo "Usage: sh batch-del-redis <pattern>"
+  exit 1
+fi
+
+cursor=0
+pnum=0 #process redis key numbers
+while(true)
+do
+    i=0
+
+    #lianghui redis
+    reply=`./redis-cli -h $host -p $port -a $passwd SCAN $cursor MATCH $1`
+    for line in $reply
+    do
+        let "i=$i+1"
+        if [[ $i == 1 ]];then
+            cursor=$line
+            continue
+        fi
+
+        #empty or *
+        if [[ -z "$line" ]] || [[ $line == "*" ]] || [[ $line != plf-* ]]; then
+            continue
+        fi
+
+        echo $line
+        ./redis-cli -h $host -p $port -a $passwd DEL $line
+        let "pnum=$pnum+1"
+    done
+    echo $cursor
+    if [[ $cursor == 0 ]];then
+        echo $pnum
+        break
+    fi
+done
